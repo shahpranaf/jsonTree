@@ -1,0 +1,129 @@
+<!-- Nested node template -->
+
+<script type="text/ng-template" id="nodes_renderer2.html">
+    <div class="tree-node">        
+            <div class="pull-left tree-handle" ui-tree-handle>
+                <span class="glyphicon glyphicon-list"></span>
+            </div>
+            <div class="tree-node-content">
+                <div class="" ng-click="toggleInputBox(node)">
+                <a class="btn btn-success btn-xs" data-nodrag ng-click="toggle(this)">
+                 <span class="glyphicon" ng-class="{
+                    'glyphicon-chevron-right': collapsed,
+                    'glyphicon-chevron-down': !collapsed
+                    }">
+                    </span>
+                    </a>
+                 {{node.title}}
+                </div>
+        
+            <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+            <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
+            </div>
+    </div>
+
+    <div class="query-param-area addHeader" ng-class="adddingArea[node.id] == true ? 'show' : 'hide'" id="addHeaderParamDialog">
+            <div class="clearfix">
+                <div class="col-xs-4 column">
+                    <div>
+                        <div class="angucomplete-holder">
+                            <input ng-class="{error:issaveclick}" autofocus="" id="headerParamInput_value" ng-model="node.title"
+                                type="text" placeholder="Name" class="form-control form-control-small ng-touched ng-empty" 
+                                ng-blur="trimSpace()">
+                            <!-- ngIf: showDropdown -->
+                        </div>
+                        <div ng-show="createAPIOperationRequest.paramDialogErrMsg" class="errorMsg ng-binding ng-hide"></div>
+                    </div>
+                    <div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle ng-pristine ng-valid ng-binding ng-touched ng-not-empty" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false" ng-model="createAPIOperationRequest.parameter.type.name">
+            string <span class="caret"></span>
+            </button>
+                            <ul class="dropdown-menu">
+                                <!-- ngRepeat: type in createAPIOperationRequest.paramTypes -->
+                                <li ng-repeat="type in createAPIOperationRequest.paramTypes" class="ng-scope">
+                                    <a href="#" ng-click="createAPIOperationRequest.selectParamType(type,createAPIOperationRequest.parameter)" class="ng-binding">string</a>
+                                </li>                            
+                            </ul>
+                        </div>
+                        <label class="request-label pull-right">
+                            <api-modeler-check model="createAPIOperationRequest.parameter.isArr" class="ng-isolate-scope"><div class="api-checkbox" ng-class="{checked: checked || model, disabled: disabled}"> <input type="checkbox" undefined="" ng-model="model" class="ng-pristine ng-untouched ng-valid ng-empty"></div></api-modeler-check>array
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-4 column">
+                    <textarea class="form-control resize-vertical ng-pristine ng-untouched ng-valid ng-empty" rows="3" placeholder="Describe this parameter"
+                        ng-model="createAPIOperationRequest.parameter.desc"></textarea>
+                </div>
+                <div class="col-xs-4 column">
+                    <div><input class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" type="text"
+                            ng-focus="createAPIOperationRequest.typeErrMsg=null" placeholder="Default value" required="" ng-model="node.value"
+                            ng-class="{error:createAPIOperationRequest.typeErrMsg}"></div>
+                    <div>
+                        <label class="request-label">
+            <api-modeler-check model="createAPIOperationRequest.parameter.required" class="ng-isolate-scope"><div class="api-checkbox" ng-class="{checked: checked || model, disabled: disabled}"> <input type="checkbox" undefined="" ng-model="model" class="ng-pristine ng-untouched ng-valid ng-empty"></div></api-modeler-check>Required
+            </label>
+                    </div>
+                    <div ng-show="createAPIOperationRequest.typeErrMsg" class="errorMsg ng-hide">Invalid default value!</div>
+                </div>
+            </div>
+            <hr>
+            <div class="clearfix bottom-btn-wrapper">
+                <button class="btn api-btn-default-2 ng-binding" ng-click="createAPIOperationRequest.cancelAddHeader()">Cancel</button>
+                <button class="btn api-btn-default ng-binding" ng-click="createAPIOperationRequest.saveAddHeader( createAPIOperationRequest.parameter.isEdit )">Create</button>
+            </div>
+        </div>
+
+
+    <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+        <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer2.html'">
+        </li>
+    </ol>
+
+
+    
+
+
+</script>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Connected Trees Cloning</h3>
+        <p>
+            The <code>data-clone-enabled</code> attribute can be added to a ui-tree element to allow nodes to be copied to
+            another ui-tree rather than moved. Add <code>data-nodrop-enabled</code> to the source tree to leave the node
+            in the tree while cloning.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- <div class="col-sm-6">
+      <h3>Tree 1 - Source</h3>
+      <div ui-tree id="tree1-root" data-clone-enabled="true" data-nodrop-enabled="true">
+        <ol ui-tree-nodes="" ng-model="tree1">
+          <li ng-repeat="node in tree1" ui-tree-node ng-include="'nodes_renderer1.html'"></li>
+        </ol>
+      </div>
+    </div> -->
+
+    <div class="col-sm-6">
+        <div ui-tree id="tree2-root" data-clone-enabled="true">
+            <ol ui-tree-nodes="" ng-model="tree2">
+                <li ng-repeat="node in tree2" ui-tree-node ng-include="'nodes_renderer2.html'"></li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<h3>Data binding</h3>
+<div class="row">
+    <!-- <div class="col-sm-6">
+      <pre class="code">{{ tree1 | json }}</pre>
+    </div> -->
+
+    <div class="col-sm-6">
+        <pre class="code">{{ tree2 | json }}</pre>
+    </div>
+</div>
